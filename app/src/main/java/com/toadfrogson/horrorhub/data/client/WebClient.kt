@@ -16,11 +16,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 const val baseUrl = "https://api.themoviedb.org/"
-
+const val apiKey = "?api_key=8c241427387d1477f9214911ad446bbb"
 class WebClient {
 
     suspend inline fun <reified T: Any>makeClientGet(endpoint: String) : ApiResponse<T> {
-        val url = baseUrl + endpoint
+        val url = baseUrl + endpoint + apiKey
         return try {
             val client = getWebClient()
             val response = client.get(url).body<T>()
