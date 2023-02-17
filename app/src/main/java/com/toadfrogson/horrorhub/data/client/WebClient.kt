@@ -26,7 +26,6 @@ class WebClient {
             val response = client.get(url).body<T>()
             ApiResponse(true, response, null)
         } catch (e: Exception) {
-            print("WHY $e")
             ApiResponse(false, null, null)
         }
     }
@@ -48,6 +47,7 @@ class WebClient {
                 prettyPrint = true
                 isLenient = true
                 explicitNulls = false
+                ignoreUnknownKeys = true
             })
         }
     }
