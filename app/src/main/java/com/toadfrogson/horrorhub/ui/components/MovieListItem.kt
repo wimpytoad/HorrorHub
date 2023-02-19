@@ -5,12 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -23,6 +28,7 @@ fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity) {
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .background(Color.LightGray)
             .fillMaxWidth()
+            .height(250.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
@@ -32,13 +38,30 @@ fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity) {
                     .padding(top = 8.dp, bottom = 8.dp, start = 8.dp)
                     .weight(0.4f)
             )
-            Column(modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxSize()
-                .weight(0.6f)) {
-                Text(text = data.title.orEmpty())
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxSize()
+                    .weight(0.6f)
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = data.title.orEmpty(),
+                    style = MaterialTheme.typography.titleMedium
+                )
 
-                Text(modifier = Modifier.padding(top = 8.dp), text = data.release_date.orEmpty())
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = data.release_date.orEmpty(),
+                    style = MaterialTheme.typography.labelSmall
+                )
+
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = data.overview.orEmpty(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -46,8 +69,7 @@ fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity) {
 
 //TODO make movie data class to transform entity
 fun getFullPosterUrl(posterPath: String): String {
-    val posterUrl =
-        return "https://image.tmdb.org/t/p/original/" + posterPath
+    return "https://image.tmdb.org/t/p/original/" + posterPath
 }
 
 @Preview(showBackground = true)
