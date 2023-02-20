@@ -1,26 +1,16 @@
 package com.toadfrogson.horrorhub.ui.screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import coil.ImageLoader.Builder
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
-import kotlinx.coroutines.delay
+import com.toadfrogson.horrorhub.ui.components.ImageSlideShow
 
 const val movieDetailsRoute = "movie_details_screen"
 
@@ -32,13 +22,30 @@ fun MovieDetailsScreen(viewModel: MovieListViewModel) {
     val imagery = viewModel.imageryState.collectAsState().value
     Scaffold() {
         Column() {
+            MovieDetailsHeader(
+                selectedMovie?.original_title.orEmpty(),
+                selectedMovie?.release_date.orEmpty(),
+                selectedMovie?.runtime.toString()
+            )
+
             val imageUrls =
                 imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
 
             if (!imageUrls.isNullOrEmpty()) {
-                PosterSlideShow(imageUrls = imageUrls)
+                ImageSlideShow(imageUrls = imageUrls)
             }
             Text(text = "hello!")
+        }
+    }
+}
+
+@Composable
+fun MovieDetailsHeader(title: String, year: String, duration: String) {
+    Column() {
+        Text(text = title, style = MaterialTheme.typography.headlineLarge)
+        Row() {
+            Text(text = year, style = MaterialTheme.typography.bodyMedium)
+            Text(text = duration, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -46,29 +53,4 @@ fun MovieDetailsScreen(viewModel: MovieListViewModel) {
 //TODO make movie data class to transform entity
 fun getFullPosterUrl(posterPath: String): String {
     return "https://image.tmdb.org/t/p/original/" + posterPath
-}
-
-@Composable
-fun PosterSlideShow(imageUrls: List<String>) {
-    var index by remember { mutableStateOf(0) }
-    var selectedImageUrl by remember { mutableStateOf(imageUrls[0]) }
-    val context = LocalContext.current
-    val imageLoader = remember {
-        Builder(context)
-            .crossfade(true)
-            .build()
-    }
-    val painter =
-        rememberAsyncImagePainter(getFullPosterUrl(selectedImageUrl), imageLoader = imageLoader)
-    LaunchedEffect(Unit) {
-        while (true) {
-            index = (index + 1) % imageUrls.size
-            val nextImageRequest = ImageRequest.Builder(context).data(imageUrls[index]).build()
-            imageLoader.enqueue(nextImageRequest)
-            delay(7000)
-            selectedImageUrl = imageUrls[index]
-        }
-    }
-    Image(painter = painter, contentDescription = "", modifier = Modifier.fillMaxSize())
-
 }
