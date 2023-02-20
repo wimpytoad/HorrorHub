@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader.Builder
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import kotlinx.coroutines.delay
 
@@ -31,7 +32,8 @@ fun MovieDetailsScreen(viewModel: MovieListViewModel) {
     val imagery = viewModel.imageryState.collectAsState().value
     Scaffold() {
         Column() {
-            val imageUrls = imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
+            val imageUrls =
+                imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
 
             if (!imageUrls.isNullOrEmpty()) {
                 PosterSlideShow(imageUrls = imageUrls)
@@ -49,7 +51,7 @@ fun getFullPosterUrl(posterPath: String): String {
 @Composable
 fun PosterSlideShow(imageUrls: List<String>) {
     var index by remember { mutableStateOf(0) }
-    var selectedImageUrl by remember { mutableStateOf(imageUrls[index]) }
+    var selectedImageUrl by remember { mutableStateOf(imageUrls[0]) }
     val context = LocalContext.current
     val imageLoader = remember {
         Builder(context)
@@ -60,8 +62,10 @@ fun PosterSlideShow(imageUrls: List<String>) {
         rememberAsyncImagePainter(getFullPosterUrl(selectedImageUrl), imageLoader = imageLoader)
     LaunchedEffect(Unit) {
         while (true) {
-            delay(3000)
             index = (index + 1) % imageUrls.size
+            val nextImageRequest = ImageRequest.Builder(context).data(imageUrls[index]).build()
+            imageLoader.enqueue(nextImageRequest)
+            delay(7000)
             selectedImageUrl = imageUrls[index]
         }
     }
