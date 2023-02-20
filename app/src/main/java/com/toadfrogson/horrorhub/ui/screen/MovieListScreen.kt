@@ -14,14 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import com.toadfrogson.horrorhub.ui.components.MovieListItem
-import org.koin.androidx.compose.koinViewModel
 
 const val movieScreenRoute = "movie_screen_view"
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListScreen(navController: NavHostController, viewModel: MovieListViewModel ) {
+fun MovieListScreen(navController: NavHostController, viewModel: MovieListViewModel) {
 
     Scaffold(
 
