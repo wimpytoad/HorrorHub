@@ -49,10 +49,10 @@ class MovieListViewModel(private val moviesApi: GetMoviesApi) : ViewModel() {
 
     fun selectItem(itemSelected: MovieEntity) {
         selectedMovie = itemSelected
-        getSelectedMovieImagery(itemSelected.id)
+        getSelectedMovieImagery()
     }
 
-    private fun getSelectedMovieImagery(selectedMovieId: Int?) {
+    private fun getSelectedMovieImagery() {
         val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
