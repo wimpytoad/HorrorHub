@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toadfrogson.horrorhub.data.repo.movielist.GetMoviesApi
-import com.toadfrogson.horrorhub.data.repo.movielist.model.MovieEntity
-import com.toadfrogson.horrorhub.data.repo.movielist.model.MovieListEntity
-import com.toadfrogson.horrorhub.data.repo.movielist.model.MoviePostersEntity
+import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
+import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
+import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
+import com.toadfrogson.horrorhub.domain.repo.GetMoviesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

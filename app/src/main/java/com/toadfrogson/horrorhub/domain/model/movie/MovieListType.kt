@@ -1,4 +1,4 @@
-package com.toadfrogson.horrorhub.data.repo.movielist.model
+package com.toadfrogson.horrorhub.domain.model.movie
 
 enum class MovieListType(val id: Int) {
     CULT_CLASSIC(8240716),

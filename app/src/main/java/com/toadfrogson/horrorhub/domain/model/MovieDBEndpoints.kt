@@ -1,4 +1,6 @@
-package com.toadfrogson.horrorhub.data.repo.movielist.model
+package com.toadfrogson.horrorhub.domain.model
+
+import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 
 sealed class MovieDBEndpoints {
     data class MovieListEndpoint(val type: MovieListType) : MovieDBEndpoints() {

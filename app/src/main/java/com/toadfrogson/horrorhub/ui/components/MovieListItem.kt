@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.toadfrogson.horrorhub.data.repo.movielist.model.MovieEntity
+import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
 
 @Composable
 fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity, onSelected: () -> Unit) {
