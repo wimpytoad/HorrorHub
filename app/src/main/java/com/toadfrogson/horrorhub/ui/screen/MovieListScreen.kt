@@ -11,20 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import com.toadfrogson.horrorhub.ui.components.MovieListItem
+
 
 const val movieScreenRoute = "movie_screen_view"
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListScreen(navController: NavHostController, viewModel: MovieListViewModel) {
+fun MovieListScreen(navController: NavHostController, viewModel: MovieListViewModel = hiltViewModel()) {
 
-    Scaffold(
-
-    ) {
+    Scaffold {
         val movies = viewModel.state.collectAsState().value
         movies.items?.let {
             LazyColumn(

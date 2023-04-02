@@ -9,13 +9,16 @@ import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.repo.GetMoviesApi
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MovieListViewModel(private val moviesApi: GetMoviesApi) : ViewModel() {
+@HiltViewModel
+class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi) : ViewModel() {
 
     private val movies = MutableStateFlow<MovieListEntity>(MovieListEntity("", emptyList()))
     val state: StateFlow<MovieListEntity> = movies

@@ -7,9 +7,10 @@ import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.repo.GetMoviesApi
+import javax.inject.Inject
 
 
-class GetMoviesApiImpl(private val client: WebClient) : GetMoviesApi {
+class GetMoviesApiImpl @Inject constructor(private val client: WebClient) : GetMoviesApi {
     override suspend fun getSuggestedMovies(type: MovieListType): ApiResponse<MovieListEntity> {
         val endpoint = MovieDBEndpoints.MovieListEndpoint(type = type).toString()
         return client.makeClientGet(endpoint = endpoint)
