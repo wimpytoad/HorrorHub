@@ -11,11 +11,11 @@ import javax.inject.Inject
 
 class MoviesRepoImpl @Inject constructor(private val api: GetMoviesApi, private val dao: MoviesDao): MoviesRepo {
 
-    override suspend fun getSuggestedMovies(type: MovieListType): ApiResponse<MovieListEntity> {
-        TODO("Not yet implemented")
+    override suspend fun getSuggestedMovies(refresh: Boolean, type: MovieListType): ApiResponse<MovieListEntity> {
+        return api.getSuggestedMoviesRemote(type)
     }
 
-    override suspend fun getMovieImagery(movieId: Int): ApiResponse<MoviePostersEntity> {
-        TODO("Not yet implemented")
+    override suspend fun getMovieImagery(refresh: Boolean, movieId: Int): ApiResponse<MoviePostersEntity> {
+        return api.getMovieImageryRemote(movieId)
     }
 }

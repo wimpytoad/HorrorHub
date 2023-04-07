@@ -7,6 +7,6 @@ import com.toadfrogson.horrorhub.domain.model.movie.MovieListType.CULT_CLASSIC
 import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
 
 interface MoviesRepo {
-    suspend fun getSuggestedMovies(type: MovieListType = CULT_CLASSIC) : ApiResponse<MovieListEntity>
-    suspend fun getMovieImagery(movieId: Int) : ApiResponse<MoviePostersEntity>
+    suspend fun getSuggestedMovies(refresh: Boolean = false, type: MovieListType = CULT_CLASSIC) : ApiResponse<MovieListEntity>
+    suspend fun getMovieImagery(refresh: Boolean = false, movieId: Int) : ApiResponse<MoviePostersEntity>
 }
