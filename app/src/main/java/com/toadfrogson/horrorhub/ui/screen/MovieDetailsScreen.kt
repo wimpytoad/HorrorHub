@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import com.toadfrogson.horrorhub.ui.components.ImageSlideShow
 
@@ -18,7 +19,7 @@ const val movieDetailsRoute = "movie_details_screen"
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MovieDetailsScreen(viewModel: MovieListViewModel = hiltViewModel()) {
+fun MovieDetailsScreen(navController: NavController, viewModel: MovieListViewModel) {
     val selectedMovie = viewModel.selectedMovie
     val imagery = viewModel.imageryState.collectAsState().value
     Scaffold {
