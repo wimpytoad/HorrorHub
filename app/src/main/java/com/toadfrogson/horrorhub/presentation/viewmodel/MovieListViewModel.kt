@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
-import com.toadfrogson.horrorhub.domain.repo.GetMoviesApi
+import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
+import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi) : ViewModel() {
+class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi, private val repo: MoviesRepo) : ViewModel() {
 
     private val movies = MutableStateFlow<MovieListEntity>(MovieListEntity("", emptyList()))
     val state: StateFlow<MovieListEntity> = movies
@@ -44,7 +45,8 @@ class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi
 
     private suspend fun getContent(): MovieListEntity? {
         withContext(Dispatchers.IO) {
-            moviesApi.getSuggestedMovies()
+            repo.getSuggestedMovies()
+            moviesApi.getSuggestedMoviesRemote()
         }.apply {
             return this.data
         }
@@ -59,7 +61,7 @@ class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi
         val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                moviesApi.getMovieImagery(movieId)
+                moviesApi.getMovieImageryRemote(movieId)
             }.apply {
                 this.data?.let {
                     movieImagery.value = it
