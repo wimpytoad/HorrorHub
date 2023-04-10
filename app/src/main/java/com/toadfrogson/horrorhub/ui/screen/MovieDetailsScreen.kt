@@ -9,7 +9,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import com.toadfrogson.horrorhub.ui.components.ImageSlideShow
@@ -22,21 +21,23 @@ const val movieDetailsRoute = "movie_details_screen"
 fun MovieDetailsScreen(navController: NavController, viewModel: MovieListViewModel) {
     val selectedMovie = viewModel.selectedMovie
     val imagery = viewModel.imageryState.collectAsState().value
-    Scaffold {
-        Column {
-            MovieDetailsHeader(
-                selectedMovie?.original_title.orEmpty(),
-                selectedMovie?.release_date.orEmpty(),
-                selectedMovie?.runtime.toString()
-            )
+    selectedMovie?.let {movie ->
+        Scaffold {
+            Column {
+                MovieDetailsHeader(
+                    movie.originalTitle,
+                    movie.releaseDate,
+                    movie.runtime.toString()
+                )
 
-            val imageUrls =
-                imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
+                val imageUrls =
+                    imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
 
-            if (!imageUrls.isNullOrEmpty()) {
-                ImageSlideShow(imageUrls = imageUrls)
+                if (!imageUrls.isNullOrEmpty()) {
+                    ImageSlideShow(imageUrls = imageUrls)
+                }
+                Text(text = "hello!")
             }
-            Text(text = "hello!")
         }
     }
 }

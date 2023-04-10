@@ -1,4 +1,4 @@
-package com.toadfrogson.horrorhub.domain.model.movie
+package com.toadfrogson.horrorhub.domain.model.movie.raw
 
 import kotlinx.serialization.Serializable
 

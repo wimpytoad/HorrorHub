@@ -25,12 +25,12 @@ fun MovieListScreen(navController: NavHostController, viewModel: MovieListViewMo
 
     Scaffold {
         val movies = viewModel.state.collectAsState().value
-        movies.items?.let {
+        movies.let {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                items(it) { movie ->
+                items(movies) { movie ->
                     MovieListItem(data = movie, onSelected = {
                         viewModel.selectItem(movie)
                         navController.navigate(movieDetailsRoute)

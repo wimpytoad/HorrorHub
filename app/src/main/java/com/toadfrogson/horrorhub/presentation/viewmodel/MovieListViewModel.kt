@@ -5,11 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
-import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
-import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
-import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
+import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
+import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
+import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +19,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi, private val repo: MoviesRepo) : ViewModel() {
+class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : ViewModel() {
 
-    private val movies = MutableStateFlow<MovieListEntity>(MovieListEntity("", emptyList()))
-    val state: StateFlow<MovieListEntity> = movies
+    private val movies = MutableStateFlow(emptyList<MovieUIModel>())
+    val state: StateFlow<List<MovieUIModel>> = movies
 
-    var selectedMovie: MovieEntity? by mutableStateOf(null)
+    var selectedMovie: MovieUIModel? by mutableStateOf(null)
         private set
 
     private val movieImagery = MutableStateFlow(MoviePostersEntity())
@@ -37,22 +37,22 @@ class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi
     private fun getMovies() {
         viewModelScope.launch {
             val content = getContent()
-            content?.let {
-                movies.value = it
+            movies.value = content
+        }
+    }
+
+    private suspend fun getContent(): List<MovieUIModel> {
+        withContext(Dispatchers.IO) {
+            repo.getSuggestedMovies()
+        }.apply {
+            return when (this) {
+                is RepoResult.Success -> this.data
+                is RepoResult.Failure -> emptyList()
             }
         }
     }
 
-    private suspend fun getContent(): MovieListEntity? {
-        withContext(Dispatchers.IO) {
-            repo.getSuggestedMovies()
-            moviesApi.getSuggestedMoviesRemote()
-        }.apply {
-            return this.data
-        }
-    }
-
-    fun selectItem(itemSelected: MovieEntity) {
+    fun selectItem(itemSelected: MovieUIModel) {
         selectedMovie = itemSelected
         getSelectedMovieImagery()
     }
@@ -61,10 +61,10 @@ class MovieListViewModel @Inject constructor(private val moviesApi: GetMoviesApi
         val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                moviesApi.getMovieImageryRemote(movieId)
+                repo.getMovieImagery(false, movieId)
             }.apply {
-                this.data?.let {
-                    movieImagery.value = it
+                if (this is RepoResult.Success) {
+                    movieImagery.value = this.data
                 }
             }
         }

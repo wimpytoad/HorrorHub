@@ -1,10 +1,10 @@
 package com.toadfrogson.horrorhub.data.client
 
-import com.toadfrogson.horrorhub.data.response.ApiResponse
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ApiResponse
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ErrorResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.cache.storage.CacheStorage.Companion
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
@@ -27,7 +27,7 @@ class WebClient {
             val response = client.get(url).body<T>()
             ApiResponse(true, response, null)
         } catch (e: Exception) {
-            ApiResponse(false, null, null)
+            ApiResponse(false, null, ErrorResponse(e.message.orEmpty(), 0))
         }
     }
 

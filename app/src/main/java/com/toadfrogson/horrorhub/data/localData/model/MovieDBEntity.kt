@@ -1,62 +1,67 @@
 package com.toadfrogson.horrorhub.data.localData.model
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 
 @Entity(tableName = "movies_db")
 data class MovieDBEntity(
-    val homepage: String?,
-    @PrimaryKey
-    val id: Int?,
-    val original_language: String?,
-    val original_title: String?,
-    val overview: String?,
-    val popularity: Double?,
-    val poster_path: String?,
-    val release_date: String?,
-    val runtime: Int?,
-    val tagline: String?,
-    val title: String?,
-    val video: Boolean?,
-    val vote_average: Double?,
-    val vote_count: Int?
-)
+    @PrimaryKey val id: Int,
+    val homepage: String,
+    val originalLanguage: String,
+    val originalTitle: String,
+    val title: String, //whats the difference with originalTItle?
+    val genres: List<String>,
+    val overview: String,
+    val popularity: Double,
+    val posterUrl: String,
+    val countries: List<String>,
+    val releaseDate: String,
+    val runtime: Int,
+    val tagline: String,
+    val hasTrailer: Boolean,
+    val voteAverage: Double,
+    val voteCount: Int,
+) {
+    companion object {
+        fun convertFromUiModel(model: MovieUIModel): MovieDBEntity =
+            MovieDBEntity(
+                id = model.id,
+                homepage = model.homepage,
+                originalTitle = model.homepage,
+                title = model.title,
+                originalLanguage = model.originalLanguage,
+                genres = model.genres,
+                overview = model.overview,
+                posterUrl = model.posterUrl,
+                popularity = model.popularity,
+                countries = model.countries,
+                runtime = model.runtime,
+                releaseDate = model.releaseDate,
+                tagline = model.tagline,
+                hasTrailer = model.hasTrailer,
+                voteAverage = model.voteAverage,
+                voteCount = model.voteCount
+            )
 
-
-@Entity(tableName = "movie_genres")
-data class MovieGenreEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val movieId: Int?,
-    val genreId: Int?
-)
-
-@Entity(tableName = "production_companies")
-data class ProductionCompanyEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val movieId: Int?,
-    val logo_path: String?,
-    val name: String?,
-    val origin_country: String?
-)
-
-@Entity(tableName = "production_countries")
-data class ProductionCountryEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val movieId: Int?,
-    val iso_3166_1: String?,
-    val name: String?
-)
-
-@Entity(tableName = "spoken_languages")
-data class SpokenLanguageEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int?,
-    val movieId: Int?,
-    val english_name: String?,
-    val iso_639_1: String?,
-    val name: String?
-)
+        fun convertToUiModel(entity: MovieDBEntity): MovieUIModel =
+            MovieUIModel(
+                id = entity.id,
+                homepage = entity.homepage,
+                originalTitle = entity.homepage,
+                title = entity.title,
+                originalLanguage = entity.originalLanguage,
+                genres = entity.genres,
+                overview = entity.overview,
+                posterUrl = entity.posterUrl,
+                popularity = entity.popularity,
+                countries = entity.countries,
+                runtime = entity.runtime,
+                releaseDate = entity.releaseDate,
+                tagline = entity.tagline,
+                hasTrailer = entity.hasTrailer,
+                voteAverage = entity.voteAverage,
+                voteCount = entity.voteCount
+            )
+    }
+}

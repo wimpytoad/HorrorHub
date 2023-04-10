@@ -1,4 +1,4 @@
-package com.toadfrogson.horrorhub.data.response
+package com.toadfrogson.horrorhub.domain.api.apiResponse
 
 import kotlinx.serialization.Serializable
 

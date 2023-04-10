@@ -1,12 +1,12 @@
 package com.toadfrogson.horrorhub.domain.repo
 
-import com.toadfrogson.horrorhub.data.response.ApiResponse
-import com.toadfrogson.horrorhub.domain.model.movie.MovieListEntity
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType.CULT_CLASSIC
-import com.toadfrogson.horrorhub.domain.model.movie.MoviePostersEntity
+import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
+import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult
 
 interface MoviesRepo {
-    suspend fun getSuggestedMovies(refresh: Boolean = false, type: MovieListType = CULT_CLASSIC) : ApiResponse<MovieListEntity>
-    suspend fun getMovieImagery(refresh: Boolean = false, movieId: Int) : ApiResponse<MoviePostersEntity>
+    suspend fun getSuggestedMovies(refresh: Boolean = true, type: MovieListType = CULT_CLASSIC) : RepoResult<List<MovieUIModel>>
+    suspend fun getMovieImagery(refresh: Boolean = true, movieId: Int) : RepoResult<MoviePostersEntity>
 }

@@ -18,10 +18,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.toadfrogson.horrorhub.domain.model.movie.MovieEntity
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 
 @Composable
-fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity, onSelected: () -> Unit) {
+fun MovieListItem(modifier: Modifier = Modifier, data: MovieUIModel, onSelected: () -> Unit) {
     Card(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -34,8 +34,8 @@ fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity, onSelected: 
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                model = getFullPosterUrl(data.poster_path.orEmpty()),
-                contentDescription = data.original_title,
+                model = getFullPosterUrl(data.posterUrl),
+                contentDescription = data.originalTitle,
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 8.dp, start = 8.dp)
                     .weight(0.4f)
@@ -48,19 +48,19 @@ fun MovieListItem(modifier: Modifier = Modifier, data: MovieEntity, onSelected: 
             ) {
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
-                    text = data.title.orEmpty(),
+                    text = data.title,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
-                    text = data.release_date.orEmpty(),
+                    text = data.releaseDate,
                     style = MaterialTheme.typography.labelSmall
                 )
 
                 Text(
                     modifier = Modifier.padding(top = 4.dp),
-                    text = data.overview.orEmpty(),
+                    text = data.overview,
                     style = MaterialTheme.typography.bodyLarge,
                     overflow = TextOverflow.Ellipsis
                 )
