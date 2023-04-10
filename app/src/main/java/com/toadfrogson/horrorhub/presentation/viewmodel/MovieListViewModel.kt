@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
@@ -23,6 +22,7 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
 
     private val movies = MutableStateFlow(emptyList<MovieUIModel>())
     val state: StateFlow<List<MovieUIModel>> = movies
+    var isLoading by mutableStateOf(true)
 
     var selectedMovie: MovieUIModel? by mutableStateOf(null)
         private set
@@ -35,9 +35,11 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
     }
 
     private fun getMovies() {
+        isLoading = true
         viewModelScope.launch {
             val content = getContent()
             movies.value = content
+            isLoading = false
         }
     }
 
