@@ -36,7 +36,7 @@ fun MovieDetailsScreen(navController: NavController, viewModel: MovieListViewMod
                 if (!imageUrls.isNullOrEmpty()) {
                     ImageSlideShow(imageUrls = imageUrls)
                 }
-                Text(text = "hello!")
+                Text(text = "!")
             }
         }
     }
