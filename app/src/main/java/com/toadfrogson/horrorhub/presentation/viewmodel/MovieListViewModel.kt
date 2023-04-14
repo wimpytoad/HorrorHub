@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
-import com.toadfrogson.horrorhub.domain.usecase.MovieDetailsUseCase
-import com.toadfrogson.horrorhub.domain.usecase.MovieListUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieDetailsUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +45,7 @@ class MovieListViewModel @Inject constructor(
 
     private suspend fun getContent(): List<MovieUIModel> {
         return withContext(Dispatchers.IO) {
-            movieListUseCase()
+            movieListUseCase(MovieListUseCase.Params())
         }
     }
 
@@ -58,7 +58,7 @@ class MovieListViewModel @Inject constructor(
         val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                movieDetailsUseCase(false, movieId)
+                movieDetailsUseCase(MovieDetailsUseCase.Params(movieId = movieId))
             }.apply {
                 movieImagery.value = this
             }

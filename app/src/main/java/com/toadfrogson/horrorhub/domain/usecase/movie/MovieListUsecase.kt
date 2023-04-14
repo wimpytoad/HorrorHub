@@ -1,4 +1,4 @@
-package com.toadfrogson.horrorhub.domain.usecase
+package com.toadfrogson.horrorhub.domain.usecase.movie
 
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType.CULT_CLASSIC
@@ -7,19 +7,26 @@ import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
 import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult.Failure
 import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult.Success
+import com.toadfrogson.horrorhub.domain.usecase.UseCase
 import javax.inject.Inject
 
-interface MovieListUseCase {
-    suspend operator fun invoke(
-        refreshContent: Boolean = false,
-        listType: MovieListType = CULT_CLASSIC
+interface MovieListUseCase : UseCase<MovieListUseCase.Params, List<MovieUIModel>> {
+    override suspend operator fun invoke(
+        params: Params
     ): List<MovieUIModel>
+
+    data class Params(
+        val refreshContent: Boolean = false,
+        val listType: MovieListType = CULT_CLASSIC
+    )
 }
 
-class MovieListUseCaseIml @Inject constructor(private val repo: MoviesRepo) : MovieListUseCase {
-    override suspend operator fun invoke(refreshContent: Boolean, listType: MovieListType
+class MovieListUseCaseImpl @Inject constructor(private val repo: MoviesRepo) : MovieListUseCase {
+    override suspend operator fun invoke(
+        params: MovieListUseCase.Params
     ): List<MovieUIModel> {
-        return when (val repoResponse = repo.getSuggestedMovies(refresh = refreshContent, type = listType)) {
+        return when (val repoResponse =
+            repo.getSuggestedMovies(refresh = params.refreshContent, type = params.listType)) {
             is Success -> returnData(repoResponse.data)
             is Failure -> returnError()
         }
@@ -30,4 +37,5 @@ class MovieListUseCaseIml @Inject constructor(private val repo: MoviesRepo) : Mo
     }
 
     private fun returnError() = emptyList<MovieUIModel>()
+
 }

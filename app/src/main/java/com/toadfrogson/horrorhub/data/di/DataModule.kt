@@ -8,10 +8,10 @@ import com.toadfrogson.horrorhub.data.localData.MovieDatabase
 import com.toadfrogson.horrorhub.data.repo.movielist.MoviesRepoImpl
 import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
-import com.toadfrogson.horrorhub.domain.usecase.MovieDetailsUseCase
-import com.toadfrogson.horrorhub.domain.usecase.MovieDetailsUseCaseImpl
-import com.toadfrogson.horrorhub.domain.usecase.MovieListUseCase
-import com.toadfrogson.horrorhub.domain.usecase.MovieListUseCaseIml
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieDetailsUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieDetailsUseCaseImpl
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -57,7 +57,7 @@ abstract class MovieApiModule {
 @InstallIn(SingletonComponent::class)
 abstract class UseCaseModule {
     @Binds
-    abstract fun bindsMovieListUseCase(impl: MovieListUseCaseIml): MovieListUseCase
+    abstract fun bindsMovieListUseCase(impl: MovieListUseCaseImpl): MovieListUseCase
 
     @Binds
     abstract fun bindsMovieDetailsUseCase(impl: MovieDetailsUseCaseImpl): MovieDetailsUseCase
