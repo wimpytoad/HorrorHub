@@ -16,11 +16,10 @@ interface MovieListUseCase {
     ): List<MovieUIModel>
 }
 
-class MovieListUseCaseIml @Inject constructor(private val movieRepo: MoviesRepo) : MovieListUseCase {
+class MovieListUseCaseIml @Inject constructor(private val repo: MoviesRepo) : MovieListUseCase {
     override suspend operator fun invoke(refreshContent: Boolean, listType: MovieListType
     ): List<MovieUIModel> {
-        val repoResponse = movieRepo.getSuggestedMovies(refresh = refreshContent, type = listType)
-        return when (repoResponse) {
+        return when (val repoResponse = repo.getSuggestedMovies(refresh = refreshContent, type = listType)) {
             is Success -> returnData(repoResponse.data)
             is Failure -> returnError()
         }

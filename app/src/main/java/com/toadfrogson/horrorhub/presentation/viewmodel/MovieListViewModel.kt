@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
+import com.toadfrogson.horrorhub.domain.usecase.MovieDetailsUseCase
 import com.toadfrogson.horrorhub.domain.usecase.MovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,7 +18,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val movieListUseCase: MovieListUseCase) : ViewModel() {
+class MovieListViewModel @Inject constructor(
+    private val movieListUseCase: MovieListUseCase,
+    private val movieDetailsUseCase: MovieDetailsUseCase
+) : ViewModel() {
 
     private val movies = MutableStateFlow(emptyList<MovieUIModel>())
     val state: StateFlow<List<MovieUIModel>> = movies
@@ -51,15 +55,13 @@ class MovieListViewModel @Inject constructor(private val movieListUseCase: Movie
     }
 
     private fun getSelectedMovieImagery() {
-        /*val movieId = selectedMovie?.id ?: 0
+        val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repo.getMovieImagery(false, movieId)
+                movieDetailsUseCase(false, movieId)
             }.apply {
-                if (this is RepoResult.Success) {
-                    movieImagery.value = this.data
-                }
+                movieImagery.value = this
             }
-        }*/
+        }
     }
 }
