@@ -3,6 +3,8 @@ package com.toadfrogson.horrorhub.data.repo.movielist
 import com.toadfrogson.horrorhub.data.localData.dao.MoviesDao
 import com.toadfrogson.horrorhub.data.localData.model.MovieDbEntity
 import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ApiResult.Failure
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ApiResult.Success
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
@@ -18,8 +20,10 @@ class MoviesRepoImpl @Inject constructor(private val api: GetMoviesApi, private 
         }
         val apiResponse = api.getSuggestedMoviesRemote(type)
 
-        if (!apiResponse.success || apiResponse.data == null)  {
+        if (apiResponse is Failure)  {
             return RepoResult.Failure("no content!")
+        } else {
+            apiResponse as Success
         }
 
         //save response
@@ -31,8 +35,10 @@ class MoviesRepoImpl @Inject constructor(private val api: GetMoviesApi, private 
 
     override suspend fun getMovieImagery(refresh: Boolean, movieId: Int): RepoResult<MoviePostersEntity> {
         val apiResponse = api.getMovieImageryRemote(movieId)
-        if (!apiResponse.success || apiResponse.data == null) {
+        if (apiResponse is Failure) {
             return RepoResult.Failure("no content!")
+        } else {
+            apiResponse as Success
         }
         return RepoResult.Success(apiResponse.data)
     }
