@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
-import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
-import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult
+import com.toadfrogson.horrorhub.domain.usecase.MovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : ViewModel() {
+class MovieListViewModel @Inject constructor(private val movieListUseCase: MovieListUseCase) : ViewModel() {
 
     private val movies = MutableStateFlow(emptyList<MovieUIModel>())
     val state: StateFlow<List<MovieUIModel>> = movies
@@ -41,13 +40,8 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
     }
 
     private suspend fun getContent(): List<MovieUIModel> {
-        withContext(Dispatchers.IO) {
-            repo.getSuggestedMovies()
-        }.apply {
-            return when (this) {
-                is RepoResult.Success -> this.data
-                is RepoResult.Failure -> emptyList()
-            }
+        return withContext(Dispatchers.IO) {
+            movieListUseCase()
         }
     }
 
@@ -57,7 +51,7 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
     }
 
     private fun getSelectedMovieImagery() {
-        val movieId = selectedMovie?.id ?: 0
+        /*val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repo.getMovieImagery(false, movieId)
@@ -66,6 +60,6 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
                     movieImagery.value = this.data
                 }
             }
-        }
+        }*/
     }
 }
