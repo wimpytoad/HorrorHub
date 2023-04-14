@@ -1,7 +1,7 @@
 package com.toadfrogson.horrorhub.data.repo.movielist
 
 import com.toadfrogson.horrorhub.data.localData.dao.MoviesDao
-import com.toadfrogson.horrorhub.data.localData.model.MovieDBEntity
+import com.toadfrogson.horrorhub.data.localData.model.MovieDbEntity
 import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
@@ -14,18 +14,20 @@ class MoviesRepoImpl @Inject constructor(private val api: GetMoviesApi, private 
 
     override suspend fun getSuggestedMovies(refresh: Boolean, type: MovieListType): RepoResult<List<MovieUIModel>> {
         if (!refresh) {
-            return RepoResult.Success(dao.getAll().map { MovieDBEntity.convertToUiModel(it) })
+            return RepoResult.Success(dao.getAll().map { MovieDbEntity.toMovieEntity(it) }.map { MovieUIModel.convertFromEntity(it) })
         }
         val apiResponse = api.getSuggestedMoviesRemote(type)
         if (!apiResponse.success || apiResponse.data == null)  {
             return RepoResult.Failure("no content!")
         }
 
+        //save response
+        dao.insertAll(apiResponse.data.items.map { MovieDbEntity(it) })
+
         val transformedData = apiResponse.data.items.map {
             MovieUIModel.convertFromEntity(it)
         }
-        //save response
-        dao.insertAll(transformedData.map { MovieDBEntity.convertFromUiModel(it) })
+
 
         //return result
         return RepoResult.Success(transformedData)
