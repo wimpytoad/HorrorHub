@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
