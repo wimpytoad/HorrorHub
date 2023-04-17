@@ -1,12 +1,11 @@
 package com.toadfrogson.horrorhub.domain.usecase.movie
 
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ApiResult.Failure
+import com.toadfrogson.horrorhub.domain.api.apiResponse.ApiResult.Success
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType
 import com.toadfrogson.horrorhub.domain.model.movie.MovieListType.CULT_CLASSIC
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
-import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
-import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult.Failure
-import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult.Success
 import com.toadfrogson.horrorhub.domain.usecase.UseCase
 import com.toadfrogson.horrorhub.domain.usecase.UseCaseError
 import com.toadfrogson.horrorhub.domain.usecase.UseCaseResult
