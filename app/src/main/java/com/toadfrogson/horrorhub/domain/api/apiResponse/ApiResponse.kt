@@ -1,15 +1,6 @@
 package com.toadfrogson.horrorhub.domain.api.apiResponse
 
-import kotlinx.serialization.Serializable
-
-data class ApiResponse<T>(
-    val success: Boolean = false,
-    val data: T?,
-    val errorResponse: ErrorResponse?
-)
-
-@Serializable
-data class ApiResponseEmpty(
-    val success: Boolean = false,
-    val errorResponse: ErrorResponse? = null
-)
+sealed class ApiResult<out T> {
+    data class Success<out T>(val data: T) : ApiResult<T>()
+    data class Failure(val errorMessage: String) : ApiResult<Nothing>()
+}

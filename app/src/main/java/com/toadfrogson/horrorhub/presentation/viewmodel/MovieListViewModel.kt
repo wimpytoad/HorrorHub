@@ -5,10 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
 import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
-import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
-import com.toadfrogson.horrorhub.domain.repo.repoResult.RepoResult
+import com.toadfrogson.horrorhub.domain.usecase.UseCaseResult.Success
+import com.toadfrogson.horrorhub.domain.usecase.movie.GetMovieDetailsUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @HiltViewModel
-class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : ViewModel() {
+class MovieListViewModel @Inject constructor(
+    private val movieListUseCase: MovieListUseCase,
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase
+) : ViewModel() {
 
     private val movies = MutableStateFlow(emptyList<MovieUIModel>())
     val state: StateFlow<List<MovieUIModel>> = movies
@@ -41,14 +46,17 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
     }
 
     private suspend fun getContent(): List<MovieUIModel> {
-        withContext(Dispatchers.IO) {
-            repo.getSuggestedMovies()
-        }.apply {
-            return when (this) {
-                is RepoResult.Success -> this.data
-                is RepoResult.Failure -> emptyList()
+        return withContext(Dispatchers.IO) {
+            when (val result = movieListUseCase(MovieListUseCase.Params())) {
+                is Success -> transformData(result.data)
+                else -> emptyList() //TODO: handle error
             }
         }
+    }
+
+    //TODO: move to separate mapping util class
+    private fun transformData(entities: List<MovieEntity>) : List<MovieUIModel> {
+        return entities.map { MovieUIModel.convertFromEntity(it) }
     }
 
     fun selectItem(itemSelected: MovieUIModel) {
@@ -60,10 +68,11 @@ class MovieListViewModel @Inject constructor(private val repo: MoviesRepo) : Vie
         val movieId = selectedMovie?.id ?: 0
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repo.getMovieImagery(false, movieId)
+                getMovieDetailsUseCase(GetMovieDetailsUseCase.Params(movieId = movieId))
             }.apply {
-                if (this is RepoResult.Success) {
-                    movieImagery.value = this.data
+                when (this) {
+                    is Success -> movieImagery.value = this.data
+                    else -> return@apply //TODO: Handle error
                 }
             }
         }
