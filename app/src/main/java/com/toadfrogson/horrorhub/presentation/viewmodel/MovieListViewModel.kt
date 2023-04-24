@@ -55,6 +55,7 @@ class MovieListViewModel @Inject constructor(
 
     fun selectItem(itemSelected: MovieData) {
         selectedMovie = itemSelected
+        movieImagery.value = MovieImageryData()
         getSelectedMovieImagery()
     }
 
