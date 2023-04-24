@@ -15,11 +15,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
 const val baseUrl = "https://api.themoviedb.org/"
-const val apiKey = "?api_key=8c241427387d1477f9214911ad446bbb" //TODO: move to secure place
+
 class WebClient {
 
-    suspend inline fun <reified T: Any>makeClientGet(endpoint: String) : ApiResult<T> {
-        val url = baseUrl + endpoint + apiKey
+    suspend inline fun <reified T : Any> makeClientGet(endpoint: String): ApiResult<T> {
+        val url = baseUrl + endpoint
         return try {
             val client = getWebClient()
             val response = client.get(url).body<T>()
@@ -30,7 +30,7 @@ class WebClient {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun getWebClient() = HttpClient(Android){
+    fun getWebClient() = HttpClient(Android) {
         engine {
             connectTimeout = 100_000
         }
@@ -38,7 +38,7 @@ class WebClient {
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
         }
-        install(ContentNegotiation){
+        install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
                 isLenient = true
