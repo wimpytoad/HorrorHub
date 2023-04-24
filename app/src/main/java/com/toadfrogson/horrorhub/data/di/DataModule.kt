@@ -10,6 +10,8 @@ import com.toadfrogson.horrorhub.domain.api.GetMoviesApi
 import com.toadfrogson.horrorhub.domain.repo.MoviesRepo
 import com.toadfrogson.horrorhub.domain.usecase.movie.GetMovieDetailsUseCase
 import com.toadfrogson.horrorhub.domain.usecase.movie.GetMovieDetailsUseCaseImpl
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieGuessGameUseCase
+import com.toadfrogson.horrorhub.domain.usecase.movie.MovieGuessGameUseCaseImpl
 import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCase
 import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCaseImpl
 import dagger.Binds
@@ -61,4 +63,7 @@ abstract class UseCaseModule {
 
     @Binds
     abstract fun bindsMovieDetailsUseCase(impl: GetMovieDetailsUseCaseImpl): GetMovieDetailsUseCase
+
+    @Binds
+    abstract fun bindsMovieGuessGameUseCase(impl: MovieGuessGameUseCaseImpl): MovieGuessGameUseCase
 }

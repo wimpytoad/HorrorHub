@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import com.toadfrogson.horrorhub.presentation.viewmodel.MovieListViewModel
 import com.toadfrogson.horrorhub.ui.screen.MovieDetailsScreen
 import com.toadfrogson.horrorhub.ui.screen.MovieListScreen
+import com.toadfrogson.horrorhub.ui.screen.game.GuessMovieScreen
+import com.toadfrogson.horrorhub.ui.screen.game.guessMovieGameRoute
 import com.toadfrogson.horrorhub.ui.screen.movieDetailsRoute
 import com.toadfrogson.horrorhub.ui.screen.movieScreenRoute
 
@@ -22,6 +24,10 @@ fun MovieNavigation(navController: NavHostController) {
         composable(movieDetailsRoute)
         {
             MovieDetailsScreen(navController = navController, viewModel = viewModel)
+        }
+
+        composable(guessMovieGameRoute) {
+            GuessMovieScreen(navController = navController)
         }
     }
 }
