@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
-import com.toadfrogson.horrorhub.domain.model.movie.raw.MoviePostersEntity
-import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieData
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieImageryData
 import com.toadfrogson.horrorhub.domain.usecase.UseCaseResult.Success
 import com.toadfrogson.horrorhub.domain.usecase.movie.GetMovieDetailsUseCase
 import com.toadfrogson.horrorhub.domain.usecase.movie.MovieListUseCase
@@ -25,14 +24,14 @@ class MovieListViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase
 ) : ViewModel() {
 
-    private val movies = MutableStateFlow(emptyList<MovieUIModel>())
-    val state: StateFlow<List<MovieUIModel>> = movies
+    private val movies = MutableStateFlow(emptyList<MovieData>())
+    val state: StateFlow<List<MovieData>> = movies
 
-    var selectedMovie: MovieUIModel? by mutableStateOf(null)
+    var selectedMovie: MovieData? by mutableStateOf(null)
         private set
 
-    private val movieImagery = MutableStateFlow(MoviePostersEntity())
-    val imageryState: StateFlow<MoviePostersEntity> = movieImagery
+    private val movieImagery = MutableStateFlow(MovieImageryData())
+    val imageryState: StateFlow<MovieImageryData> = movieImagery
 
     init {
         getMovies()
@@ -45,21 +44,16 @@ class MovieListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getContent(): List<MovieUIModel> {
+    private suspend fun getContent(): List<MovieData> {
         return withContext(Dispatchers.IO) {
             when (val result = movieListUseCase(MovieListUseCase.Params())) {
-                is Success -> transformData(result.data)
+                is Success -> result.data
                 else -> emptyList() //TODO: handle error
             }
         }
     }
 
-    //TODO: move to separate mapping util class
-    private fun transformData(entities: List<MovieEntity>) : List<MovieUIModel> {
-        return entities.map { MovieUIModel.convertFromEntity(it) }
-    }
-
-    fun selectItem(itemSelected: MovieUIModel) {
+    fun selectItem(itemSelected: MovieData) {
         selectedMovie = itemSelected
         getSelectedMovieImagery()
     }

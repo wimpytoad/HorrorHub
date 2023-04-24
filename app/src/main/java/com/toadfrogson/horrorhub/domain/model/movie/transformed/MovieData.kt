@@ -2,7 +2,7 @@ package com.toadfrogson.horrorhub.domain.model.movie.transformed
 
 import com.toadfrogson.horrorhub.domain.model.movie.raw.MovieEntity
 
-data class MovieUIModel(
+data class MovieData(
     val id: Int,
     val homepage: String,
     val originalLanguage: String,
@@ -22,7 +22,7 @@ data class MovieUIModel(
 ) {
     companion object {
         fun convertFromEntity(entity: MovieEntity) =
-            MovieUIModel(
+            MovieData(
                 id = entity.id ?: -1,
                 homepage = entity.homepage.orEmpty(),
                 originalLanguage = entity.original_language.orEmpty(),

@@ -28,7 +28,7 @@ fun ImageSlideShow(imageUrls: List<String>) {
             .build()
     }
     val painter =
-        rememberAsyncImagePainter(com.toadfrogson.horrorhub.ui.screen.getFullPosterUrl(selectedImageUrl), imageLoader = imageLoader)
+        rememberAsyncImagePainter(selectedImageUrl, imageLoader = imageLoader)
     LaunchedEffect(Unit) {
         while (true) {
             index = (index + 1) % imageUrls.size

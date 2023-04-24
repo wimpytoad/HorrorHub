@@ -18,10 +18,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieUIModel
+import com.toadfrogson.horrorhub.domain.model.movie.transformed.MovieData
 
 @Composable
-fun MovieListItem(modifier: Modifier = Modifier, data: MovieUIModel, onSelected: () -> Unit) {
+fun MovieListItem(modifier: Modifier = Modifier, data: MovieData, onSelected: () -> Unit) {
     Card(
         modifier = modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)

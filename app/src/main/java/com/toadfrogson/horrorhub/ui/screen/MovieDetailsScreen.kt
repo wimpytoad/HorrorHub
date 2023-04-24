@@ -31,9 +31,9 @@ fun MovieDetailsScreen(navController: NavController, viewModel: MovieListViewMod
                 )
 
                 val imageUrls =
-                    imagery.backdrops?.mapNotNull { it.file_path.takeIf { path -> path?.isNotEmpty() == true } }
+                    imagery.backdrops.mapNotNull { it.filePath.takeIf { path -> path.isNotEmpty() } }
 
-                if (!imageUrls.isNullOrEmpty()) {
+                if (imageUrls.isNotEmpty()) {
                     ImageSlideShow(imageUrls = imageUrls)
                 }
                 Text(text = "")
@@ -51,9 +51,4 @@ fun MovieDetailsHeader(title: String, year: String, duration: String) {
             Text(text = duration, style = MaterialTheme.typography.bodyMedium)
         }
     }
-}
-
-//TODO make movie data class to transform entity
-fun getFullPosterUrl(posterPath: String): String {
-    return "https://image.tmdb.org/t/p/original/" + posterPath
 }
